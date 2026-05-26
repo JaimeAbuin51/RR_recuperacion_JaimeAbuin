@@ -4,3 +4,8 @@
 ### La idea base es crear una página web de recetas antigüas recuperadas de la historia para que no se pierdan, haciendo un juego de palabras con recuperar el curso y la historia de estas mismas recetas
 
 - Instalando el entorno virtual + .gitignore para que no se suba el entorno al Git
+
+## Superuser: Jaime avmjaime@gmail.com recu51
+
+- Creación de ficheros base del proyecto y commits para verificarlo
+
