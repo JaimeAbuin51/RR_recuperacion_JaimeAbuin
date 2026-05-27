@@ -21,3 +21,5 @@
 - Primera receta visible
 
 ## Tuve un fallo a las 11:46 sobre el mergeo y tire de IA para arreglarlo, por eso el commit es tan robotico y me puse nervioso porque pense que perdia el avance
+
+- Boton filtro 12:22

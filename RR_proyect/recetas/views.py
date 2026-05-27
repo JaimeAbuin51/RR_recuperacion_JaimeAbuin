@@ -7,13 +7,30 @@ from django.contrib.auth.decorators import login_required
 from .models import Receta, Comentario, Categoria
 from .forms import RecetaForm, ComentarioForm
 
-
 class ListaRecetas(ListView):
     model = Receta
     template_name = 'recetas/lista_recetas.html'
     context_object_name = 'recetas'
     paginate_by = 10
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search = self.request.GET.get('search')
+        categoria = self.request.GET.get('categoria')
+        
+        if search:
+            queryset = queryset.filter(titulo__icontains=search)
+        if categoria:
+            queryset = queryset.filter(categoria_id=categoria)
+        
+        return queryset
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search'] = self.request.GET.get('search', '')
+        context['categorias'] = Categoria.objects.all()
+        context['categoria_seleccionada'] = self.request.GET.get('categoria', '')
+        return context
 class DetalleReceta(DetailView):
     model = Receta
     template_name = 'recetas/detalle_receta.html'
