@@ -12,3 +12,4 @@
 ## 27/05/2026 10:07
 - Continuación del proyecto el miercoles
 
+### Los modelos ahora mismo los tengo ya creados, ahora paso a views creando todas las que voy a incorporar ahora mismo, aunque a futuro seguramente añada mas
