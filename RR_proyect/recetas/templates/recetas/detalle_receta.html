@@ -1,0 +1,44 @@
+{% extends 'recetas/base.html' %}
+
+{% block title %}{{ receta.titulo }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <h1>{{ receta.titulo }}</h1>
+        
+        <div class="alert alert-light">
+            <p><strong>Categoría:</strong> {{ receta.categoria }}</p>
+            <p><strong>Autor:</strong> {{ receta.autor }}</p>
+            <p><strong>Tiempo de preparación:</strong> {{ receta.tiempo_preparacion }} minutos</p>
+            <p><strong>Fecha:</strong> {{ receta.fecha_creacion|date:"d/m/Y H:i" }}</p>
+        </div>
+
+        <h3>Ingredientes</h3>
+        <p>{{ receta.ingredientes|linebreaks }}</p>
+
+        <h3>Pasos de elaboración</h3>
+        <p>{{ receta.pasos|linebreaks }}</p>
+
+        {% if user == receta.autor %}
+        <div class="btn-group" role="group">
+            <a href="{% url 'editar_receta' receta.id %}" class="btn btn-warning">Editar</a>
+            <a href="{% url 'eliminar_receta' receta.id %}" class="btn btn-danger">Eliminar</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="col-md-4">
+        <h3>Comentarios</h3>
+
+        {% if user.is_authenticated %}
+        <form method="post" action="{% url 'crear_comentario' receta.id %}" class="mb-3">
+            {% csrf_token %}
+            <textarea class="form-control mb-2" name="contenido" rows="3" placeholder="Escribe un comentario..." required></textarea>
+            <button type="submit" class="btn btn-primary btn-sm w-100">Comentar</button>
+        </form>
+        {% else %}
+        <p class="alert alert-info small">Inicia sesión para comentar.</p>
+        {% endif %}
+
+        {% for comentario in come

@@ -13,3 +13,7 @@
 - Continuación del proyecto el miercoles
 
 ### Los modelos ahora mismo los tengo ya creados, ahora paso a views creando todas las que voy a incorporar ahora mismo, aunque a futuro seguramente añada mas
+
+- recetas/templates/recetas alberga actualmente los 6 HTMLs que debo tener en el proyecto 10:57
+
+## HE CREADO LA PRIMERA RECETA DE LA PAGINA 11:05
