@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from .models import Receta, Comentario, Categoria
 from .forms import RecetaForm, ComentarioForm
+
 
 class ListaRecetas(ListView):
     model = Receta
@@ -69,3 +71,9 @@ def eliminar_comentario(request, comentario_id):
         comentario.delete()
         return redirect('detalle_receta', pk=receta_id)
     return redirect('lista_recetas')
+
+class CustomLoginView(LoginView):
+    template_name = 'recetas/login.html'
+    
+class CustomLogoutView(LogoutView):
+    pass
