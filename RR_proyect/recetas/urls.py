@@ -10,5 +10,5 @@ urlpatterns = [
     path('comentario/crear/<int:receta_id>/', views.crear_comentario, name='crear_comentario'),
     path('comentario/eliminar/<int:comentario_id>/', views.eliminar_comentario, name='eliminar_comentario'),
     path('login/', views.CustomLoginView.as_view(), name='login'),
-    path('logout/', views.CustomLogoutView.as_view(), name='logout'),
+    path('logout/', views.CustomLogoutView.as_view(next_page='lista_recetas'), name='logout'),
 ]

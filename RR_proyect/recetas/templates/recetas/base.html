@@ -20,7 +20,10 @@
                             <a class="nav-link" href="{% url 'crear_receta' %}">+ Nueva Receta</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'logout' %}">Logout ({{ user.username }})</a>
+                            <form method="post" action="{% url 'logout' %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="nav-link btn btn-link">Logout ({{ user.username }})</button>
+                            </form>
                         </li>
                     {% else %}
                         <li class="nav-item">

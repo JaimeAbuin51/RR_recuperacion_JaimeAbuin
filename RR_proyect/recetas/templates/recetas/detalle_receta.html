@@ -41,4 +41,23 @@
         <p class="alert alert-info small">Inicia sesión para comentar.</p>
         {% endif %}
 
-        {% for comentario in come
+        {% for comentario in comentario in comentarios %}
+        <div class="card mb-2">
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">{{ comentario.autor }}</h6>
+                <p class="card-text small">{{ comentario.contenido }}</p>
+                <p class="card-text text-muted small">{{ comentario.fecha_creacion|date:"d/m/Y H:i" }}</p>
+                {% if user == comentario.autor %}
+                    <a href="{% url 'eliminar_comentario' comentario.id %}" class="btn btn-danger btn-sm">Eliminar</a>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-muted small">Sin comentarios aún.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<hr>
+<a href="{% url 'lista_recetas' %}" class="btn btn-secondary">← Volver</a>
+{% endblock %}
