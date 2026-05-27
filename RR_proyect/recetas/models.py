@@ -19,6 +19,10 @@ class Receta(models.Model):
 
     class Meta:
         ordering = ['-fecha_creacion']
+    
+    def clean(self):
+        if self.tiempo_preparacion <= 0:
+            raise ValueError("El tiempo de preparación debe ser mayor a 0")
 
     def __str__(self):
         return self.titulo
