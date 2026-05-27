@@ -19,3 +19,12 @@ class Receta(models.Model):
 
     def __str__(self):
         return self.titulo
+
+class Comentario(models.Model):
+    contenido = models.TextField()
+    autor = models.ForeignKey(User, on_delete=models.CASCADE)
+    receta = models.ForeignKey(Receta, on_delete=models.CASCADE)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Comentario de {self.autor} en {self.receta}"

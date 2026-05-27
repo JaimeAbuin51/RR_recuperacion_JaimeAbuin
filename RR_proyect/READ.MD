@@ -9,3 +9,6 @@
 
 - Creación de ficheros base del proyecto y commits para verificarlo
 
+## 27/05/2026 10:07
+- Continuación del proyecto el miercoles
+
