@@ -12,4 +12,7 @@ urlpatterns = [
     path('login/', views.CustomLoginView.as_view(), name='login'),
     path('logout/', views.CustomLogoutView.as_view(next_page='lista_recetas'), name='logout'),
     path('registro/', views.RegistroView.as_view(), name='registro'),
+    path('externas/', views.BuscarRecetasExternas.as_view(), name='buscar_externas'),
+    path('externas/<int:meal_id>/', views.detalle_externa, name='detalle_externa'),
+    path('guardar-externa/', views.guardar_externa, name='guardar_externa'),
 ]

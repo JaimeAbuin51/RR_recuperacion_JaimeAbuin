@@ -8,8 +8,8 @@ from django.contrib import messages
 from .models import Receta, Comentario, Categoria
 from .forms import RecetaForm, ComentarioForm
 from django.contrib.auth.models import User
-from django.views.generic import CreateView
 from django.contrib.auth.forms import UserCreationForm
+import requests
 
 class ListaRecetas(ListView):
     model = Receta
@@ -127,3 +127,71 @@ class RegistroView(CreateView):
     form_class = UserCreationForm
     template_name = 'recetas/registro.html'
     success_url = reverse_lazy('login')
+
+class BuscarRecetasExternas(ListView):
+    template_name = 'recetas/buscar_externas.html'
+    context_object_name = 'recetas_externas'
+    paginate_by = 10
+    
+    def get_queryset(self):
+        search = self.request.GET.get('search', '')
+        if not search:
+            return []
+        
+        try:
+            url = f'https://www.themealdb.com/api/json/v1/1/search.php?s={search}'
+            response = requests.get(url, timeout=5)
+            data = response.json()
+            
+            if data.get('meals'):
+                return data['meals']
+            return []
+        except:
+            return []
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search'] = self.request.GET.get('search', '')
+        context['categorias'] = Categoria.objects.all()
+        return context
+
+def detalle_externa(request, meal_id):
+    try:
+        url = f'https://www.themealdb.com/api/json/v1/1/lookup.php?i={meal_id}'
+        response = requests.get(url, timeout=5)
+        data = response.json()
+        
+        if data.get('meals'):
+            receta = data['meals'][0]
+            categorias = Categoria.objects.all()
+            return render(request, 'recetas/detalle_externa.html', {'receta': receta, 'categorias': categorias})
+    except:
+        pass
+    
+    return redirect('buscar_externas')
+
+@login_required
+def guardar_externa(request):
+    if request.method == 'POST':
+        titulo = request.POST.get('meal_name')
+        categoria_id = request.POST.get('categoria')
+        instrucciones = request.POST.get('meal_instructions')
+        imagen_url = request.POST.get('meal_image')
+        
+        try:
+            categoria = Categoria.objects.get(id=categoria_id)
+            receta = Receta.objects.create(
+                titulo=titulo,
+                ingredientes='Receta importada de TheMealDB',
+                pasos=instrucciones,
+                tiempo_preparacion=30,
+                categoria=categoria,
+                autor=request.user
+            )
+            messages.success(request, 'Receta guardada exitosamente', extra_tags='success')
+            return redirect('detalle_receta', pk=receta.pk)
+        except:
+            messages.error(request, 'Error al guardar la receta')
+            return redirect('buscar_externas')
+    
+    return redirect('buscar_externas')
