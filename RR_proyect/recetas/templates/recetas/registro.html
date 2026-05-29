@@ -1,0 +1,68 @@
+{% extends 'recetas/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}Registrarse{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <div class="card mt-5 shadow-lg">
+            <div class="card-body p-5">
+                <h2 class="card-title text-center mb-4" style="color: #2c3e50; font-weight: bold;">Crear Cuenta</h2>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+                    
+                    {% for field in form %}
+                        <div class="mb-3">
+                            {{ field.label_tag }}
+                            {{ field }}
+                            {% if field.errors %}
+                                <div class="alert alert-danger mt-2">
+                                    {{ field.errors }}
+                                </div>
+                            {% endif %}
+                            {% if field.help_text %}
+                                <small class="text-muted d-block mt-1">{{ field.help_text|safe }}</small>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    
+                    <button type="submit" class="btn btn-success btn-lg w-100 fw-bold">Registrarse</button>
+                    
+                    <div class="text-center mt-4">
+                        <p class="mb-0">¿Ya tienes cuenta? <a href="{% url 'login' %}" class="text-decoration-none fw-bold">Inicia sesión aquí</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border: none;
+        border-radius: 12px;
+    }
+    
+    input[type="text"],
+    input[type="password"] {
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+        padding: 12px 15px;
+        width: 100%;
+    }
+    
+    input:focus {
+        border-color: #28a745;
+        box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+    }
+</style>
+{% endblock %}

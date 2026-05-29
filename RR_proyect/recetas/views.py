@@ -7,6 +7,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Receta, Comentario, Categoria
 from .forms import RecetaForm, ComentarioForm
+from django.contrib.auth.models import User
+from django.views.generic import CreateView
+from django.contrib.auth.forms import UserCreationForm
 
 class ListaRecetas(ListView):
     model = Receta
@@ -119,3 +122,8 @@ class CustomLoginView(LoginView):
     
 class CustomLogoutView(LogoutView):
     pass
+
+class RegistroView(CreateView):
+    form_class = UserCreationForm
+    template_name = 'recetas/registro.html'
+    success_url = reverse_lazy('login')

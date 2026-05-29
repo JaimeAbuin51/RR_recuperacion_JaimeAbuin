@@ -30,3 +30,7 @@
 
 - Añadiendo ver imagenes y un boton para mostrar contraseña, asi es mas facil no equivocarse
 ### Permite: JPG, PNG, GIF, BMP, WEBP y algunos más. 10:49
+
+- Añadiendo opcion de registrarse, que no se porque no lo pense antes
+
+- Los comentarios funcionan correctamente

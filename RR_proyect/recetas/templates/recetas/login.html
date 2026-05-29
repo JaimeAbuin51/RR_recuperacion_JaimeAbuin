@@ -30,13 +30,14 @@
                     </div>
                     
                     <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
+                    <p class="text-center mt-3">¿No tienes cuenta? <a href="{% url 'registro' %}">Regístrate aquí</a></p>
                 </form>
             </div>
         </div>
     </div>
 </div>
 
-// Script para mostrar/ocultar contraseña
+<!-- Script de login-->
 <script>
     document.getElementById('togglePassword').addEventListener('click', function() {
         var passwordField = document.querySelector('input[name="password"]');
@@ -51,4 +52,5 @@
         }
     });
 </script>
+
 {% endblock %}
