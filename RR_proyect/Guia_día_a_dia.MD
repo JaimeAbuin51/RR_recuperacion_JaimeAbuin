@@ -27,3 +27,6 @@
 ## 29/05/2026
 
 - Fallos a la hora de mostrar notificaciones de cuando se crean y eliminan recetas actualmente
+
+- Añadiendo ver imagenes y un boton para mostrar contraseña, asi es mas facil no equivocarse
+### Permite: JPG, PNG, GIF, BMP, WEBP y algunos más. 10:49

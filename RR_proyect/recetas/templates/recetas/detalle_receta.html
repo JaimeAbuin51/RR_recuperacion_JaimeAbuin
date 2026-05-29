@@ -6,6 +6,9 @@
 <div class="row">
     <div class="col-md-8">
         <h1>{{ receta.titulo }}</h1>
+        {% if receta.imagen %}
+        <img src="{{ receta.imagen.url }}" alt="{{ receta.titulo }}" style="max-width: 100%; height: auto; margin: 20px 0; border-radius: 8px;">
+        {% endif %}
         
         <div class="alert alert-light">
             <p><strong>Categoría:</strong> {{ receta.categoria }}</p>

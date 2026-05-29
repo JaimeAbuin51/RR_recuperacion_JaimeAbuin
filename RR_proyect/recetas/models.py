@@ -16,6 +16,7 @@ class Receta(models.Model):
     categoria = models.ForeignKey(Categoria, on_delete=models.SET_NULL, null=True)
     autor = models.ForeignKey(User, on_delete=models.CASCADE)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
+    imagen = models.ImageField(upload_to='recetas/', blank=True, null=True)
 
     class Meta:
         ordering = ['-fecha_creacion']

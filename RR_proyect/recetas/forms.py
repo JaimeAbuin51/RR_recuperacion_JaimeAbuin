@@ -4,7 +4,7 @@ from .models import Receta, Comentario
 class RecetaForm(forms.ModelForm):
     class Meta:
         model = Receta
-        fields = ['titulo', 'ingredientes', 'pasos', 'tiempo_preparacion', 'categoria']
+        fields = ['titulo', 'ingredientes', 'pasos', 'tiempo_preparacion', 'categoria', 'imagen']
         widgets = {
             'titulo': forms.TextInput(attrs={'class': 'form-control'}),
             'ingredientes': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
@@ -19,4 +19,5 @@ class ComentarioForm(forms.ModelForm):
         fields = ['contenido']
         widgets = {
             'contenido': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'imagen': forms.FileInput(attrs={'class': 'form-control'}),
         }
