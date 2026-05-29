@@ -1,25 +1,64 @@
-# RRecipes proyect
-## 26/05/2026 13:04 
-- Creación del proyecto
-### La idea base es crear una página web de recetas antigüas recuperadas de la historia para que no se pierdan, haciendo un juego de palabras con recuperar el curso y la historia de estas mismas recetas
+# Aplicación de Recetas - Django
 
-- Instalando el entorno virtual + .gitignore para que no se suba el entorno al Git
+## Instalación
 
-## Superuser: Jaime avmjaime@gmail.com recu51
+### Requisitos
+- Python 3.10+
+- pip
+- Git
 
-- Creación de ficheros base del proyecto y commits para verificarlo
+### Pasos de instalación
 
-## 27/05/2026 10:07
-- Continuación del proyecto el miercoles
+1. **Clonar el repositorio**
+```bash
+git clone <tu-repo-url>
+cd rrecipes
+```
 
-### Los modelos ahora mismo los tengo ya creados, ahora paso a views creando todas las que voy a incorporar ahora mismo, aunque a futuro seguramente añada mas
+2. **Crear entorno virtual**
+```bash
+python3 -m venv venv
+source venv/bin/activate  # En Windows: venv\Scripts\activate
+```
 
-- recetas/templates/recetas alberga actualmente los 6 HTMLs que debo tener en el proyecto 10:57
+3. **Instalar dependencias**
+```bash
+pip install --upgrade pip
+pip install django==4.2
+pip install django-crispy-forms
+pip install crispy-bootstrap4
+pip install pillow
+pip install python-decouple
+```
 
-## HE CREADO LA PRIMERA RECETA DE LA PAGINA 11:05
+4. **Ejecutar migraciones**
+```bash
+python manage.py migrate
+```
 
-- Primera receta visible
+5. **Crear superusuario**
+```bash
+python manage.py createsuperuser
+```
 
-## Tuve un fallo a las 11:46 sobre el mergeo y tire de IA para arreglarlo, por eso el commit es tan robotico y me puse nervioso porque pense que perdia el avance
+6. **Iniciar servidor**
+```bash
+python manage.py runserver
+```
 
-- Boton filtro 12:22
+Accede a http://127.0.0.1:8000/recetas/
+
+## Funcionalidades
+
+- Listar, crear, editar y eliminar recetas
+- Sistema de comentarios
+- Búsqueda y filtrado por categoría
+- Autenticación de usuarios
+- Panel de administración
+
+## Tecnologías
+
+- Django 4.2
+- SQLite
+- Bootstrap 5
+- Crispy Forms
