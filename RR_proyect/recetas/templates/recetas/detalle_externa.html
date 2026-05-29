@@ -1,0 +1,76 @@
+{% extends 'recetas/base.html' %}
+
+{% block title %}{{ receta.strMeal }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <h1>{{ receta.strMeal }}</h1>
+        
+        {% if receta.strMealThumb %}
+            <img src="{{ receta.strMealThumb }}" alt="{{ receta.strMeal }}" style="max-width: 100%; height: auto; margin: 20px 0; border-radius: 8px;">
+        {% endif %}
+        
+        <div class="alert alert-light">
+            <p><strong>Categoría:</strong> {{ receta.strCategory }}</p>
+            <p><strong>Cocina:</strong> {{ receta.strArea }}</p>
+            <p><strong>ID Externo:</strong> {{ receta.idMeal }}</p>
+        </div>
+        
+        <h3>Ingredientes</h3>
+        <ul>
+            {% for i in "123456789"|slice:":20" %}
+                {% with ingredient=receta|add:"strIngredient"|add:i %}
+                    {% if ingredient %}
+                        <li>{{ ingredient }} - {{ receta|add:"strMeasure"|add:i }}</li>
+                    {% endif %}
+                {% endwith %}
+            {% endfor %}
+        </ul>
+        
+        <h3>Instrucciones</h3>
+        <p>{{ receta.strInstructions|linebreaks }}</p>
+        
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#guardarModal">
+            Guardar esta receta
+        </button>
+        <a href="{% url 'buscar_externas' %}" class="btn btn-secondary">← Volver</a>
+    </div>
+</div>
+
+<!-- Modal para guardar -->
+<div class="modal fade" id="guardarModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Guardar receta</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" action="{% url 'guardar_externa' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <input type="hidden" name="meal_id" value="{{ receta.idMeal }}">
+                    <input type="hidden" name="meal_name" value="{{ receta.strMeal }}">
+                    <input type="hidden" name="meal_image" value="{{ receta.strMealThumb }}">
+                    <input type="hidden" name="meal_instructions" value="{{ receta.strInstructions }}">
+                    <input type="hidden" name="meal_category" value="{{ receta.strCategory }}">
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Selecciona una categoría</label>
+                        <select name="categoria" class="form-select" required>
+                            <option value="">-- Selecciona categoría --</option>
+                            {% for cat in categorias %}
+                                <option value="{{ cat.id }}">{{ cat.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Guardar Receta</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

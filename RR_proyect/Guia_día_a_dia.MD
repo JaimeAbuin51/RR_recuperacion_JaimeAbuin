@@ -34,3 +34,9 @@
 - Añadiendo opcion de registrarse, que no se porque no lo pense antes
 
 - Los comentarios funcionan correctamente
+
+## Voy a empezar el RA9, quizas tengo que hacer cambios en los archivos, pero no pasa nada
+
+- Hay que añadir varios HTMLs mas porque para la API son busquedas externas y no podemos tenerlo todo mezclado
+ 
+-Arregle la API, ya que me faltaba cerrar el bloque de "buscar_externas" que es la ruta a la cual estan asociados ahora mismo 12:24
