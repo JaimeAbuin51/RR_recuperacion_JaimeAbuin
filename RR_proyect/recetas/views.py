@@ -4,7 +4,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib import messages
 from .models import Receta, Comentario, Categoria
 from .forms import RecetaForm, ComentarioForm
@@ -38,6 +37,12 @@ class DetalleReceta(DetailView):
     model = Receta
     template_name = 'recetas/detalle_receta.html'
     context_object_name = 'receta'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['comentarios'] = Comentario.objects.filter(receta=self.object)
+        context['form'] = ComentarioForm()
+        return context
 
 class CrearReceta(LoginRequiredMixin, CreateView):
     model = Receta
@@ -49,18 +54,15 @@ class CrearReceta(LoginRequiredMixin, CreateView):
         form.instance.autor = self.request.user
         messages.success(self.request, 'Receta creada exitosamente', extra_tags='success')
         return super().form_valid(form)
-    
-    def form_valid(self, form):
-        form.instance.autor = self.request.user
-        return super().form_valid(form)
 
-class EditarReceta(LoginRequiredMixin, UpdateView):
+class EditarReceta(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Receta
     form_class = RecetaForm
     template_name = 'recetas/editar_receta.html'
     
-    def get_success_url(self):
-        return reverse_lazy('detalle_receta', kwargs={'pk': self.object.pk})
+    def test_func(self):
+        receta = self.get_object()
+        return self.request.user == receta.autor
     
     def handle_no_permission(self):
         messages.error(self.request, 'No tienes permiso para editar esta receta')
@@ -69,12 +71,11 @@ class EditarReceta(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         messages.success(self.request, 'Receta actualizada exitosamente', extra_tags='success')
         return super().form_valid(form)
+    
+    def get_success_url(self):
+        return reverse_lazy('detalle_receta', kwargs={'pk': self.object.pk})
 
-    def test_func(self):
-        receta = self.get_object()
-        return self.request.user == receta.autor
-
-class EliminarReceta(LoginRequiredMixin, DeleteView):
+class EliminarReceta(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Receta
     template_name = 'recetas/eliminar_receta.html'
     success_url = reverse_lazy('lista_recetas')
@@ -82,7 +83,7 @@ class EliminarReceta(LoginRequiredMixin, DeleteView):
     def test_func(self):
         receta = self.get_object()
         return self.request.user == receta.autor
-
+    
     def handle_no_permission(self):
         messages.error(self.request, 'No tienes permiso para eliminar esta receta')
         return redirect('lista_recetas')
@@ -118,30 +119,3 @@ class CustomLoginView(LoginView):
     
 class CustomLogoutView(LogoutView):
     pass
-
-class EditarReceta(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    model = Receta
-    form_class = RecetaForm
-    template_name = 'recetas/editar_receta.html'
-    
-    def test_func(self):
-        receta = self.get_object()
-        return self.request.user == receta.autor
-    
-    def handle_no_permission(self):
-        return redirect('lista_recetas')
-    
-    def get_success_url(self):
-        return reverse_lazy('detalle_receta', kwargs={'pk': self.object.pk})
-
-class EliminarReceta(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
-    model = Receta
-    template_name = 'recetas/eliminar_receta.html'
-    success_url = reverse_lazy('lista_recetas')
-    
-    def test_func(self):
-        receta = self.get_object()
-        return self.request.user == receta.autor
-    
-    def handle_no_permission(self):
-        return redirect('lista_recetas')
