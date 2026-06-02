@@ -52,3 +52,9 @@
 - Ahora si aparece la paginación, pero no carga la pagina 2 con mas recetas 13:23 (Usare IA para preguntar el porque)
 
 ## Sigue dando errores la paginación, ahora pasa pero no muestra recetas
+
+- Fallos y mejoras que debo aplicar 14:15:
+
+* Arreglar las rutas de externas
+* No se ve bien la duración de los platos
+* El boton de volver no es correcto 

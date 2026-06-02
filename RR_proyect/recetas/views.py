@@ -39,7 +39,6 @@ def lista_recetas(request):
                     id=meal.get('idMeal'),
                     titulo=meal.get('strMeal'),
                     autor=SimpleNamespace(username='TheMealDB'),
-                    tiempo_preparacion=30,
                     imagen=SimpleNamespace(url=meal.get('strMealThumb')),
                     es_externa=True,
                     meal_id=meal.get('idMeal')
