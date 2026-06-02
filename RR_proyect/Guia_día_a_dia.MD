@@ -44,3 +44,5 @@
 ## Tengo que arreglar y poder mas ordenado la aplicación 12:21
 
 ## 2/6/2026 Continuamos despues del finde
+
+- Tengo que añadir la funcion de MealDB en el menú, que se vean las imagenes de las recetas también es importante
