@@ -46,3 +46,9 @@
 ## 2/6/2026 Continuamos despues del finde
 
 - Tengo que añadir la funcion de MealDB en el menú, que se vean las imagenes de las recetas también es importante
+
+- Revisando porque la paginación no me muestra correctamente recetas de la API 13:00
+
+- Ahora si aparece la paginación, pero no carga la pagina 2 con mas recetas 13:23 (Usare IA para preguntar el porque)
+
+## Sigue dando errores la paginación, ahora pasa pero no muestra recetas

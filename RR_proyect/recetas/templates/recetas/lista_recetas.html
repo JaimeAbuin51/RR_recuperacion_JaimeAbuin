@@ -6,41 +6,56 @@
 <div class="row">
     <div class="col-md-12">
         <h1>📚 Recetas</h1>
-        <form method="get" class="mb-4">
+        <p>Total: {{ page_obj.paginator.count }} recetas</p>
+    </div>
+</div>
+
+<form method="get" class="mb-4">
     <div class="input-group">
         <input type="text" name="search" class="form-control" placeholder="Buscar recetas..." value="{{ search }}">
         <button class="btn btn-primary" type="submit">Buscar</button>
     </div>
 </form>
-        <p>Total: {{ recetas.count }} recetas</p>
-    </div>
+
+<div class="mb-4">
+    <label for="categoria" class="form-label">Filtrar por categoría:</label>
+    <form method="get" class="d-flex gap-2">
+        <input type="hidden" name="search" value="{{ search }}">
+        <select name="categoria" id="categoria" class="form-select" onchange="this.form.submit()">
+            <option value="">Todas las categorías</option>
+            {% for cat in categorias %}
+                <option value="{{ cat.id }}" {% if cat.id|stringformat:"s" == categoria_seleccionada %}selected{% endif %}>
+                    {{ cat.nombre }}
+                </option>
+            {% endfor %}
+        </select>
+    </form>
 </div>
 
 <div class="row">
     {% for receta in recetas %}
     <div class="col-md-4 mb-4">
         <div class="card h-100">
+            {% if receta.imagen %}
+                <img src="{{ receta.imagen.url }}" class="card-img-top" alt="{{ receta.titulo }}" style="height: 200px; object-fit: cover;">
+            {% else %}
+                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                    <span class="text-muted">Sin imagen</span>
+                </div>
+            {% endif %}
             <div class="card-body">
                 <h5 class="card-title">{{ receta.titulo }}</h5>
-                <p class="card-text">
-                    <strong>Categoría:</strong> {{ receta.categoria }}<br>
-                    <strong>Autor:</strong> {{ receta.autor }}<br>
-                    <strong>Tiempo:</strong> {{ receta.tiempo_preparacion }} min
-                </p>
-                <p class="card-text text-muted small">{{ receta.fecha_creacion|date:"d/m/Y H:i" }}</p>
+                <p class="card-text"><small class="text-muted">Por: {{ receta.autor.username }}</small></p>
+                <p class="card-text"><small>⏱️ {{ receta.tiempo_preparacion }} min</small></p>
             </div>
             <div class="card-footer bg-white">
-                <a href="{% url 'detalle_receta' receta.id %}" class="btn btn-primary btn-sm">Ver</a>
-                {% if user == receta.autor %}
-                    <a href="{% url 'editar_receta' receta.id %}" class="btn btn-warning btn-sm">Editar</a>
-                    <a href="{% url 'eliminar_receta' receta.id %}" class="btn btn-danger btn-sm">Eliminar</a>
+                {% if receta.es_externa %}
+                    <a href="{% url 'detalle_externa' receta.meal_id %}" class="btn btn-success btn-sm w-100">Ver Receta</a>
+                {% else %}
+                    <a href="{% url 'detalle_receta' receta.id %}" class="btn btn-primary btn-sm w-100">Ver Receta</a>
                 {% endif %}
             </div>
         </div>
-    </div>
-    {% empty %}
-    <div class="col-12">
-        <p class="alert alert-info">No hay recetas aún.</p>
     </div>
     {% endfor %}
 </div>
@@ -50,24 +65,25 @@
     <ul class="pagination justify-content-center">
         {% if page_obj.has_previous %}
             <li class="page-item">
-                <a class="page-link" href="?page=1">Primera</a>
+                <a class="page-link" href="?page=1{% if search %}&search={{ search }}{% endif %}{% if categoria_seleccionada %}&categoria={{ categoria_seleccionada }}{% endif %}">Primera</a>
             </li>
             <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search %}&search={{ search }}{% endif %}{% if categoria_seleccionada %}&categoria={{ categoria_seleccionada }}{% endif %}">Anterior</a>
             </li>
         {% endif %}
         <li class="page-item active">
-            <span class="page-link">Página {{ page_obj.number }}</span>
+            <span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
         </li>
         {% if page_obj.has_next %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search %}&search={{ search }}{% endif %}{% if categoria_seleccionada %}&categoria={{ categoria_seleccionada }}{% endif %}">Siguiente</a>
             </li>
             <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Última</a>
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if search %}&search={{ search }}{% endif %}{% if categoria_seleccionada %}&categoria={{ categoria_seleccionada }}{% endif %}">Última</a>
             </li>
         {% endif %}
     </ul>
 </nav>
 {% endif %}
+
 {% endblock %}

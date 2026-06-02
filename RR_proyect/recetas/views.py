@@ -9,32 +9,66 @@ from .models import Receta, Comentario, Categoria
 from .forms import RecetaForm, ComentarioForm
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from django.core.paginator import Paginator
 import requests
 
-class ListaRecetas(ListView):
-    model = Receta
-    template_name = 'recetas/lista_recetas.html'
-    context_object_name = 'recetas'
-    paginate_by = 10
+def lista_recetas(request):
+    search = request.GET.get('search', '')
+    categoria_id = request.GET.get('categoria', '')
+    page = request.GET.get('page', 1)
     
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        search = self.request.GET.get('search')
-        categoria = self.request.GET.get('categoria')
-        
-        if search:
-            queryset = queryset.filter(titulo__icontains=search)
-        if categoria:
-            queryset = queryset.filter(categoria_id=categoria)
-        
-        return queryset
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['search'] = self.request.GET.get('search', '')
-        context['categorias'] = Categoria.objects.all()
-        context['categoria_seleccionada'] = self.request.GET.get('categoria', '')
-        return context
+    # Recetas locales
+    recetas_locales = Receta.objects.all()
+    
+    if search:
+        recetas_locales = recetas_locales.filter(titulo__icontains=search)
+    if categoria_id:
+        recetas_locales = recetas_locales.filter(categoria_id=categoria_id)
+    
+    # Recetas externas
+    recetas_externas = []
+    if search:
+        try:
+            from types import SimpleNamespace
+            url = f'https://www.themealdb.com/api/json/v1/1/search.php?s={search}'
+            response = requests.get(url, timeout=5)
+            data = response.json()
+            
+            if data.get('meals'):
+                recetas_externas = [SimpleNamespace(
+                    id=meal.get('idMeal'),
+                    titulo=meal.get('strMeal'),
+                    autor=SimpleNamespace(username='TheMealDB'),
+                    tiempo_preparacion=30,
+                    imagen=SimpleNamespace(url=meal.get('strMealThumb')),
+                    es_externa=True,
+                    meal_id=meal.get('idMeal')
+                ) for meal in data['meals']]
+        except:
+            pass
+    
+    # Combinar
+    todas = list(recetas_locales) + recetas_externas
+    
+    # Paginar
+    paginator = Paginator(todas, 12)
+    try:
+        page_obj = paginator.page(int(page))
+    except:
+        page_obj = paginator.page(1)
+    
+    categorias = Categoria.objects.all()
+    
+    context = {
+        'recetas': page_obj.object_list,
+        'page_obj': page_obj,
+        'is_paginated': page_obj.has_other_pages(),
+        'search': search,
+        'categorias': categorias,
+        'categoria_seleccionada': categoria_id,
+    }
+    
+    return render(request, 'recetas/lista_recetas.html', context)
 
 class DetalleReceta(DetailView):
     model = Receta
