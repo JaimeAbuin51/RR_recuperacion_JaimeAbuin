@@ -57,4 +57,10 @@
 
 * Arreglar las rutas de externas
 * No se ve bien la duración de los platos
-* El boton de volver no es correcto 
+* El boton de volver no es correcto
+
+## 3/6/2026
+
+## YA PUDE ARREGLAR LA API, PORFIN!!!
+
+- Queda corregir el tiempo y que se guardan sin imagen + documentación para el RA1

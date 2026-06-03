@@ -177,10 +177,22 @@ class BuscarRecetasExternas(ListView):
             data = response.json()
             
             if data.get('meals'):
-                return data['meals']
-            return []
+                from types import SimpleNamespace
+                recetas_externas = [SimpleNamespace(
+                    id=meal.get('idMeal'),
+                    titulo=meal.get('strMeal'),
+                    autor=SimpleNamespace(username='TheMealDB'),
+                    tiempo_preparacion=int(meal.get('strTags', '').split(',')[0][:2]) if meal.get('strTags') else 30,
+                    imagen=SimpleNamespace(url=meal.get('strMealThumb')),
+                    es_externa=True,
+                    meal_id=meal.get('idMeal'),
+                    categoria=meal.get('strCategory', 'Sin categoría'),
+                    area=meal.get('strArea', 'Internacional')
+                ) for meal in data['meals']]
+                return recetas_externas
         except:
-            return []
+            pass
+        return []
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -189,19 +201,22 @@ class BuscarRecetasExternas(ListView):
         return context
 
 def detalle_externa(request, meal_id):
+    print(f"MEAL_ID RECIBIDO: {meal_id}")
     try:
         url = f'https://www.themealdb.com/api/json/v1/1/lookup.php?i={meal_id}'
-        response = requests.get(url, timeout=5)
+        print(f"URL: {url}")
+        response = requests.get(url, timeout=10)
         data = response.json()
+        print(f"DATA: {data.get('meals', 'SIN MEALS')}")
         
         if data.get('meals'):
             receta = data['meals'][0]
             categorias = Categoria.objects.all()
             return render(request, 'recetas/detalle_externa.html', {'receta': receta, 'categorias': categorias})
-    except:
-        pass
+    except Exception as e:
+        print(f"ERROR: {e}")
     
-    return redirect('buscar_externas')
+    return redirect('lista_recetas')
 
 @login_required
 def guardar_externa(request):

@@ -6,35 +6,47 @@
 <div class="row">
     <div class="col-md-8">
         <h1>{{ receta.strMeal }}</h1>
-        
+
         {% if receta.strMealThumb %}
             <img src="{{ receta.strMealThumb }}" alt="{{ receta.strMeal }}" style="max-width: 100%; height: auto; margin: 20px 0; border-radius: 8px;">
         {% endif %}
-        
+
         <div class="alert alert-light">
             <p><strong>Categoría:</strong> {{ receta.strCategory }}</p>
             <p><strong>Cocina:</strong> {{ receta.strArea }}</p>
-            <p><strong>ID Externo:</strong> {{ receta.idMeal }}</p>
         </div>
-        
+
         <h3>Ingredientes</h3>
         <ul>
-            {% for i in "123456789"|slice:":20" %}
-                {% with ingredient=receta|add:"strIngredient"|add:i %}
-                    {% if ingredient %}
-                        <li>{{ ingredient }} - {{ receta|add:"strMeasure"|add:i }}</li>
-                    {% endif %}
-                {% endwith %}
-            {% endfor %}
+            {% if receta.strIngredient1 %}<li>{{ receta.strIngredient1 }} - {{ receta.strMeasure1 }}</li>{% endif %}
+            {% if receta.strIngredient2 %}<li>{{ receta.strIngredient2 }} - {{ receta.strMeasure2 }}</li>{% endif %}
+            {% if receta.strIngredient3 %}<li>{{ receta.strIngredient3 }} - {{ receta.strMeasure3 }}</li>{% endif %}
+            {% if receta.strIngredient4 %}<li>{{ receta.strIngredient4 }} - {{ receta.strMeasure4 }}</li>{% endif %}
+            {% if receta.strIngredient5 %}<li>{{ receta.strIngredient5 }} - {{ receta.strMeasure5 }}</li>{% endif %}
+            {% if receta.strIngredient6 %}<li>{{ receta.strIngredient6 }} - {{ receta.strMeasure6 }}</li>{% endif %}
+            {% if receta.strIngredient7 %}<li>{{ receta.strIngredient7 }} - {{ receta.strMeasure7 }}</li>{% endif %}
+            {% if receta.strIngredient8 %}<li>{{ receta.strIngredient8 }} - {{ receta.strMeasure8 }}</li>{% endif %}
+            {% if receta.strIngredient9 %}<li>{{ receta.strIngredient9 }} - {{ receta.strMeasure9 }}</li>{% endif %}
+            {% if receta.strIngredient10 %}<li>{{ receta.strIngredient10 }} - {{ receta.strMeasure10 }}</li>{% endif %}
+            {% if receta.strIngredient11 %}<li>{{ receta.strIngredient11 }} - {{ receta.strMeasure11 }}</li>{% endif %}
+            {% if receta.strIngredient12 %}<li>{{ receta.strIngredient12 }} - {{ receta.strMeasure12 }}</li>{% endif %}
+            {% if receta.strIngredient13 %}<li>{{ receta.strIngredient13 }} - {{ receta.strMeasure13 }}</li>{% endif %}
+            {% if receta.strIngredient14 %}<li>{{ receta.strIngredient14 }} - {{ receta.strMeasure14 }}</li>{% endif %}
+            {% if receta.strIngredient15 %}<li>{{ receta.strIngredient15 }} - {{ receta.strMeasure15 }}</li>{% endif %}
+            {% if receta.strIngredient16 %}<li>{{ receta.strIngredient16 }} - {{ receta.strMeasure16 }}</li>{% endif %}
+            {% if receta.strIngredient17 %}<li>{{ receta.strIngredient17 }} - {{ receta.strMeasure17 }}</li>{% endif %}
+            {% if receta.strIngredient18 %}<li>{{ receta.strIngredient18 }} - {{ receta.strMeasure18 }}</li>{% endif %}
+            {% if receta.strIngredient19 %}<li>{{ receta.strIngredient19 }} - {{ receta.strMeasure19 }}</li>{% endif %}
+            {% if receta.strIngredient20 %}<li>{{ receta.strIngredient20 }} - {{ receta.strMeasure20 }}</li>{% endif %}
         </ul>
-        
+
         <h3>Instrucciones</h3>
         <p>{{ receta.strInstructions|linebreaks }}</p>
-        
+
         <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#guardarModal">
             Guardar esta receta
         </button>
-        <a href="{% url 'buscar_externas' %}" class="btn btn-secondary">← Volver</a>
+        <a href="{% url 'lista_recetas' %}" class="btn btn-secondary">Volver</a>
     </div>
 </div>
 
@@ -54,7 +66,7 @@
                     <input type="hidden" name="meal_image" value="{{ receta.strMealThumb }}">
                     <input type="hidden" name="meal_instructions" value="{{ receta.strInstructions }}">
                     <input type="hidden" name="meal_category" value="{{ receta.strCategory }}">
-                    
+
                     <div class="mb-3">
                         <label class="form-label">Selecciona una categoría</label>
                         <select name="categoria" class="form-select" required>
