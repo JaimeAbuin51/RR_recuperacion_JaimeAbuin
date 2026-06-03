@@ -66,3 +66,5 @@
 - Queda corregir el tiempo y que se guardan sin imagen + documentación para el RA1
 
 - Con ayuda de IA, pude arreglar estos fallos 10:43
+
+- Imagenes arregladas, falta la documentacion de Python y listo 11:06

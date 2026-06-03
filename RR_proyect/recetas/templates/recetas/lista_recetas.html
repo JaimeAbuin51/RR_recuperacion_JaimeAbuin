@@ -36,13 +36,15 @@
     {% for receta in recetas %}
     <div class="col-md-4 mb-4">
         <div class="card h-100">
-            {% if receta.imagen %}
-                <img src="{{ receta.imagen.url }}" class="card-img-top" alt="{{ receta.titulo }}" style="height: 200px; object-fit: cover;">
-            {% else %}
-                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-                    <span class="text-muted">Sin imagen</span>
-                </div>
-            {% endif %}
+    {% if receta.es_externa %}
+        <img src="{{ receta.imagen.url }}" class="card-img-top" alt="{{ receta.titulo }}" style="height: 200px; object-fit: cover;">
+    {% elif receta.imagen %}
+        <img src="{{ receta.imagen.url }}" class="card-img-top" alt="{{ receta.titulo }}" style="height: 200px; object-fit: cover;">
+    {% else %}
+        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+            <span class="text-muted">Sin imagen</span>
+        </div>
+    {% endif %}
             <div class="card-body">
                 <h5 class="card-title">{{ receta.titulo }}</h5>
                 <p class="card-text"><small class="text-muted">Por: {{ receta.autor.username }}</small></p>
