@@ -46,7 +46,9 @@
             <div class="card-body">
                 <h5 class="card-title">{{ receta.titulo }}</h5>
                 <p class="card-text"><small class="text-muted">Por: {{ receta.autor.username }}</small></p>
+                {% if receta.tiempo_preparacion and not receta.es_externa %}
                 <p class="card-text"><small>⏱️ {{ receta.tiempo_preparacion }} min</small></p>
+            {% endif %}
             </div>
             <div class="card-footer bg-white">
                 {% if receta.es_externa %}

@@ -64,3 +64,5 @@
 ## YA PUDE ARREGLAR LA API, PORFIN!!!
 
 - Queda corregir el tiempo y que se guardan sin imagen + documentación para el RA1
+
+- Con ayuda de IA, pude arreglar estos fallos 10:43

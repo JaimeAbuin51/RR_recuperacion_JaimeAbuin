@@ -10,6 +10,9 @@ from .forms import RecetaForm, ComentarioForm
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.core.paginator import Paginator
+from django.core.files.base import ContentFile
+from types import SimpleNamespace
+import urllib.request
 import requests
 
 def lista_recetas(request):
@@ -17,7 +20,6 @@ def lista_recetas(request):
     categoria_id = request.GET.get('categoria', '')
     page = request.GET.get('page', 1)
     
-    # Recetas locales
     recetas_locales = Receta.objects.all()
     
     if search:
@@ -25,11 +27,9 @@ def lista_recetas(request):
     if categoria_id:
         recetas_locales = recetas_locales.filter(categoria_id=categoria_id)
     
-    # Recetas externas
     recetas_externas = []
     if search:
         try:
-            from types import SimpleNamespace
             url = f'https://www.themealdb.com/api/json/v1/1/search.php?s={search}'
             response = requests.get(url, timeout=5)
             data = response.json()
@@ -46,10 +46,7 @@ def lista_recetas(request):
         except:
             pass
     
-    # Combinar
     todas = list(recetas_locales) + recetas_externas
-    
-    # Paginar
     paginator = Paginator(todas, 12)
     try:
         page_obj = paginator.page(int(page))
@@ -170,26 +167,12 @@ class BuscarRecetasExternas(ListView):
         search = self.request.GET.get('search', '')
         if not search:
             return []
-        
         try:
             url = f'https://www.themealdb.com/api/json/v1/1/search.php?s={search}'
             response = requests.get(url, timeout=5)
             data = response.json()
-            
             if data.get('meals'):
-                from types import SimpleNamespace
-                recetas_externas = [SimpleNamespace(
-                    id=meal.get('idMeal'),
-                    titulo=meal.get('strMeal'),
-                    autor=SimpleNamespace(username='TheMealDB'),
-                    tiempo_preparacion=int(meal.get('strTags', '').split(',')[0][:2]) if meal.get('strTags') else 30,
-                    imagen=SimpleNamespace(url=meal.get('strMealThumb')),
-                    es_externa=True,
-                    meal_id=meal.get('idMeal'),
-                    categoria=meal.get('strCategory', 'Sin categoría'),
-                    area=meal.get('strArea', 'Internacional')
-                ) for meal in data['meals']]
-                return recetas_externas
+                return data['meals']
         except:
             pass
         return []
@@ -201,13 +184,10 @@ class BuscarRecetasExternas(ListView):
         return context
 
 def detalle_externa(request, meal_id):
-    print(f"MEAL_ID RECIBIDO: {meal_id}")
     try:
         url = f'https://www.themealdb.com/api/json/v1/1/lookup.php?i={meal_id}'
-        print(f"URL: {url}")
         response = requests.get(url, timeout=10)
         data = response.json()
-        print(f"DATA: {data.get('meals', 'SIN MEALS')}")
         
         if data.get('meals'):
             receta = data['meals'][0]
@@ -228,7 +208,7 @@ def guardar_externa(request):
         
         try:
             categoria = Categoria.objects.get(id=categoria_id)
-            receta = Receta.objects.create(
+            receta = Receta(
                 titulo=titulo,
                 ingredientes='Receta importada de TheMealDB',
                 pasos=instrucciones,
@@ -236,10 +216,21 @@ def guardar_externa(request):
                 categoria=categoria,
                 autor=request.user
             )
+            
+            if imagen_url:
+                try:
+                    img_response = urllib.request.urlopen(imagen_url)
+                    img_content = img_response.read()
+                    img_name = imagen_url.split('/')[-1]
+                    receta.imagen.save(img_name, ContentFile(img_content), save=False)
+                except:
+                    pass
+            
+            receta.save()
             messages.success(request, 'Receta guardada exitosamente', extra_tags='success')
             return redirect('detalle_receta', pk=receta.pk)
         except:
             messages.error(request, 'Error al guardar la receta')
-            return redirect('buscar_externas')
+            return redirect('lista_recetas')
     
-    return redirect('buscar_externas')
+    return redirect('lista_recetas')
