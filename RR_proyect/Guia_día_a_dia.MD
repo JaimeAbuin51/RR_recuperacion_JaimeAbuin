@@ -68,3 +68,9 @@
 - Con ayuda de IA, pude arreglar estos fallos 10:43
 
 - Imagenes arregladas, falta la documentacion de Python y listo 11:06
+
+## 5/6/2026
+
+- Ultimo día de trabajo antes de entregar el proyecto 10:03
+
+- Voy a preguntar si esta todo correcto y ya lo tendría terminado 11:36
